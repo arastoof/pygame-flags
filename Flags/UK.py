@@ -33,7 +33,8 @@ white = (255, 255, 255) # White represents Scotland and purity
 blue = (1, 33, 105) # Blue represents Ireland and loyalty
 
 def drawFlag():
-    screen.fill(blue)
+    surface = pygame.Surface((screenWidth, screenHeight))
+    surface.fill(blue)
     diagonalAngles = (math.radians(60), math.radians(120))
     diagonalSize = (screenWidth ** 2 + screenHeight ** 2) ** 0.5
     
@@ -41,7 +42,7 @@ def drawFlag():
     # Scotland - Represented by the blue background and the white St Andrew's saltire
     for counter in range (0, 2):
         diagonalRectPoints = rotatedRectPlotter(halfWidth, halfHeight, screenHeight / 5, diagonalSize, diagonalAngles[counter])
-        pygame.draw.polygon(screen, white, diagonalRectPoints)
+        pygame.draw.polygon(surface, white, diagonalRectPoints)
 
     # Ireland - Represented by the red St Patrick's saltire (though only Northern Ireland is in the union, which doesn't have an official flag)
     baseQuadrantCentreX = (halfWidth + screenHeight / 6)
@@ -57,27 +58,32 @@ def drawFlag():
         if counter > 1:
             angle = diagonalAngles[1]
         diagonalRectPoints = rotatedRectPlotter(quadrantCentreX, quadrantCentreY, screenHeight / 15, size, angle)
-        pygame.draw.polygon(screen, red, diagonalRectPoints)
+        pygame.draw.polygon(surface, red, diagonalRectPoints)
             
 
-    pygame.draw.polygon(screen, white, rectPlotter(halfWidth, halfHeight, screenHeight / 3, screenHeight)) # White vertical
-    pygame.draw.polygon(screen, white, rectPlotter(halfWidth, halfHeight, screenWidth, screenHeight / 3)) # White horizontal
+    pygame.draw.polygon(surface, white, rectPlotter(halfWidth, halfHeight, screenHeight / 3, screenHeight)) # White vertical
+    pygame.draw.polygon(surface, white, rectPlotter(halfWidth, halfHeight, screenWidth, screenHeight / 3)) # White horizontal
     
     # England and Wales - Represented by the straight red St George's cross (though this only uses England's flag)
-    pygame.draw.polygon(screen, red, rectPlotter(halfWidth, halfHeight, screenHeight / 5, screenHeight)) # Red vertical
-    pygame.draw.polygon(screen, red, rectPlotter(halfWidth, halfHeight, screenWidth, screenHeight / 5)) # Red horizontal
+    pygame.draw.polygon(surface, red, rectPlotter(halfWidth, halfHeight, screenHeight / 5, screenHeight)) # Red vertical
+    pygame.draw.polygon(surface, red, rectPlotter(halfWidth, halfHeight, screenWidth, screenHeight / 5)) # Red horizontal
+
+    return surface
 
 if __name__ == "__main__":
     pygame.init()
     screen = pygame.display.set_mode((1280, 720))
     running = True
 
+    surface = drawFlag()
+    screen.blit(surface, (0, 0))
+    pygame.display.update()
+
+    clock = pygame.time.Clock()
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-
-        drawFlag()
-        pygame.display.update()
+        clock.tick(5)
 
     pygame.quit()

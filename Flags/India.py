@@ -24,16 +24,18 @@ blue = (6, 3, 141)
 green = (4, 106, 56) # Green represents faith and chivalry
 
 def drawFlag():
-    screen.fill(white)
-    pygame.draw.rect(screen, saffron, [0, 0, screenWidth, screenHeight / 3])
-    pygame.draw.rect(screen, green, [0, screenHeight * 2 / 3, screenWidth, screenHeight / 3])
+    surface = pygame.Surface((screenWidth, screenHeight))
+
+    surface.fill(white)
+    pygame.draw.rect(surface, saffron, [0, 0, screenWidth, screenHeight / 3])
+    pygame.draw.rect(surface, green, [0, screenHeight * 2 / 3, screenWidth, screenHeight / 3])
 
     # Generates the Ashoka Chakra (Emperor Ashoka's wheel), or Dharmachakra (the wheel of law and duty)
     outerRadius = screenHeight * 2 / 13
     innerRadius = screenHeight * 2 / 15
-    pygame.draw.circle(screen, blue, (screenWidth / 2, screenHeight / 2), outerRadius)
-    pygame.draw.circle(screen, white, (screenWidth / 2, screenHeight / 2), innerRadius)
-    pygame.draw.circle(screen, blue, (screenWidth / 2, screenHeight / 2), innerRadius / 4)
+    pygame.draw.circle(surface, blue, (screenWidth / 2, screenHeight / 2), outerRadius)
+    pygame.draw.circle(surface, white, (screenWidth / 2, screenHeight / 2), innerRadius)
+    pygame.draw.circle(surface, blue, (screenWidth / 2, screenHeight / 2), innerRadius / 4)
 
     angle = math.radians(15)
     for counter in range(1, 25):
@@ -43,7 +45,7 @@ def drawFlag():
         newY = y * math.cos(math.radians(7.5)) + x * math.sin(math.radians(7.5))
         newX += screenWidth / 2
         newY += screenHeight / 2
-        pygame.draw.circle(screen, blue, (newX, newY), 7)
+        pygame.draw.circle(surface, blue, (newX, newY), 7)
     
     # Generates the 24 spokes on the wheel. Each spoke represents different things, including love, courage and patience
     for counter in range (0, 24):
@@ -58,19 +60,24 @@ def drawFlag():
             newY += screenHeight / 2
             rotatedPoints.append((newX, newY))
 
-        pygame.draw.polygon(screen, blue, rotatedPoints)
+        pygame.draw.polygon(surface, blue, rotatedPoints)
+
+    return surface
 
 if __name__ == "__main__":
     pygame.init()
-    screen = pygame.display.set_mode((screenWidth, screenHeight))
+    screen = pygame.display.set_mode((1280, 720))
     running = True
 
+    surface = drawFlag()
+    screen.blit(surface, (0, 0))
+    pygame.display.update()
+
+    clock = pygame.time.Clock()
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-
-        drawFlag()
-        pygame.display.update()
+        clock.tick(5)
 
     pygame.quit()

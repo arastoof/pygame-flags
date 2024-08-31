@@ -21,15 +21,17 @@ white = (255, 255, 255)
 blue = (0, 0, 149) # Blue represents freedom and democracy
 
 def drawFlag():
+    surface = pygame.Surface((screenWidth, screenHeight))
+
     # The red field represents the sacrifice of the people to establish the Republic of China
-    screen.fill(red)
+    surface.fill(red)
 
     canton = (screenWidth / 2, screenHeight / 2)
-    pygame.draw.rect(screen, blue, [0, 0, canton[0], canton[1]])
+    pygame.draw.rect(surface, blue, [0, 0, canton[0], canton[1]])
 
     # The white sun symbolises equality and the people's livelihoods
     circleRadius = canton[1] / 4
-    pygame.draw.circle(screen, white, (canton[0] / 2, canton[1] / 2), circleRadius)
+    pygame.draw.circle(surface, white, (canton[0] / 2, canton[1] / 2), circleRadius)
 
     # The 12 rays of the sun represent the 12 months of the year and the 12 traditional Chinese hours
     triangleOffset = circleRadius / 10
@@ -43,19 +45,24 @@ def drawFlag():
             newX = x * math.cos(angle) - y * math.sin(angle)
             newY = y * math.cos(angle) + x * math.sin(angle)
             trianglePoints.append((newX + canton[0] / 2, newY + canton[1] / 2))
-        pygame.draw.polygon(screen, white, trianglePoints)
+        pygame.draw.polygon(surface, white, trianglePoints)
+    
+    return surface
 
 if __name__ == "__main__":
     pygame.init()
-    screen = pygame.display.set_mode((screenWidth, screenHeight))
+    screen = pygame.display.set_mode((1280, 720))
     running = True
 
+    surface = drawFlag()
+    screen.blit(surface, (0, 0))
+    pygame.display.update()
+
+    clock = pygame.time.Clock()
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-
-        drawFlag()
-        pygame.display.update()
+        clock.tick(5)
 
     pygame.quit()

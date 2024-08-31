@@ -35,10 +35,12 @@ green = (0, 64, 26) # Green represents Islam, the majority religion in the count
 white = (255, 255, 255) # White represents the religious minorities in the country
 
 def drawFlag():
+    surface = pygame.Surface((screenWidth, screenHeight))
+
     # The green and white together mean unity.
-    screen.fill(white)
+    surface.fill(white)
     greenWidth = screenWidth * 3 / 4
-    pygame.draw.rect(screen, green, [screenWidth / 4, 0, greenWidth, screenHeight])
+    pygame.draw.rect(surface, green, [screenWidth / 4, 0, greenWidth, screenHeight])
 
     # Generates the moon, which is a symbol of progress
     moonRadius = screenHeight * 4 / 10
@@ -47,23 +49,28 @@ def drawFlag():
     yPosMoon = (screenHeight / 2)
     xOffset = xPosMoon + circleOffset
     yOffset = yPosMoon - circleOffset
-    pygame.draw.circle(screen, white, (xPosMoon, yPosMoon), moonRadius)
-    pygame.draw.circle(screen, green, (xOffset, yOffset), moonRadius * 0.9)
+    pygame.draw.circle(surface, white, (xPosMoon, yPosMoon), moonRadius)
+    pygame.draw.circle(surface, green, (xOffset, yOffset), moonRadius * 0.9)
 
     # Generates the star, which is represents knowledge and light
-    pygame.draw.polygon(screen, white, rotatedStarPlotter(xOffset * 1.1, yOffset * 5 / 6, moonRadius * 0.3, math.radians(45)))
+    pygame.draw.polygon(surface, white, rotatedStarPlotter(xOffset * 1.1, yOffset * 5 / 6, moonRadius * 0.3, math.radians(45)))
+
+    return surface
 
 if __name__ == "__main__":
     pygame.init()
-    screen = pygame.display.set_mode((screenWidth, screenHeight))
+    screen = pygame.display.set_mode((1280, 720))
     running = True
 
+    surface = drawFlag()
+    screen.blit(surface, (0, 0))
+    pygame.display.update()
+
+    clock = pygame.time.Clock()
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-
-        drawFlag()
-        pygame.display.update()
+        clock.tick(5)
 
     pygame.quit()

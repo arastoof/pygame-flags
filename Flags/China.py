@@ -35,13 +35,15 @@ red = (238, 28, 37) # Red represents the Chinese Communist Revolution
 yellow = (255, 255, 0)
 
 def drawFlag():
-    screen.fill(red)
+    surface = pygame.Surface((screenWidth, screenHeight))
+
+    surface.fill(red)
 
     # The big yellow star represents the Chinese Communist Party
     starX = screenWidth / 7
     starY = screenHeight / 4
     bigStarSize = screenWidth / 10
-    pygame.draw.polygon(screen, yellow, starPlotter(starX, starY, bigStarSize))
+    pygame.draw.polygon(surface, yellow, starPlotter(starX, starY, bigStarSize))
 
     # The smaller stars represent the unity of the Chinese people and the 4 main classes
     arcRadius = bigStarSize * 1.3
@@ -49,19 +51,24 @@ def drawFlag():
     for counter in range(1, 5):
         position = (1.6 * starX + arcRadius * math.sin(math.radians(36 * counter)), starY - arcRadius * math.cos(math.radians(36 * counter)))
     # The stars are  oriented towards the big star to represent the CCP's leadership
-        pygame.draw.polygon(screen, yellow, rotatedStarPlotter(position[0], position[1], bigStarSize / 4, math.radians(rotations[counter - 1])))
+        pygame.draw.polygon(surface, yellow, rotatedStarPlotter(position[0], position[1], bigStarSize / 4, math.radians(rotations[counter - 1])))
+
+    return surface
 
 if __name__ == "__main__":
     pygame.init()
-    screen = pygame.display.set_mode((screenWidth, screenHeight))
+    screen = pygame.display.set_mode((1280, 720))
     running = True
 
+    surface = drawFlag()
+    screen.blit(surface, (0, 0))
+    pygame.display.update()
+
+    clock = pygame.time.Clock()
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-
-        drawFlag()
-        pygame.display.update()
+        clock.tick(5)
 
     pygame.quit()

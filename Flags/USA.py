@@ -28,35 +28,42 @@ white = (255, 255, 255) # White represents purity and innocence
 blue = (60, 59, 110) # Blue represents vigilance, perseverance and justice
 
 def drawFlag():
+    surface = pygame.Surface((screenWidth, screenHeight))
+
     # Generates the stripes. 13 stripes represent 13 original colonies.
-    screen.fill(white)
+    surface.fill(white)
     for counter in range (0, 13, 2):
-        pygame.draw.rect(screen, red, [0, (screenHeight / 13) * counter, screenWidth, (screenHeight / 13)])
+        pygame.draw.rect(surface, red, [0, (screenHeight / 13) * counter, screenWidth, (screenHeight / 13)])
     
     canton = (screenWidth * 4 / 9, screenHeight * 7 / 13) # Size of the blue part
-    pygame.draw.rect(screen, blue, [0, 0, canton[0], canton[1]]) # Draws the blue part of the flag
+    pygame.draw.rect(surface, blue, [0, 0, canton[0], canton[1]]) # Draws the blue part of the flag
 
     # Draws the 50 stars on the blue part of the flag, representing each of the states in the canton
     starSize = (canton[1]) / 10
     for i in range (1, 10):
         if i % 2 != 0:
             for j in range (1, 12, 2):
-                pygame.draw.polygon(screen, white, starPlotter(j * 1.22 * starSize, starSize * i, starSize / 2))
+                pygame.draw.polygon(surface, white, starPlotter(j * 1.22 * starSize, starSize * i, starSize / 2))
         if i % 2 == 0:
             for k in range (2, 12, 2):
-                pygame.draw.polygon(screen, white, starPlotter(k * 1.22 * starSize, starSize * i, starSize / 2))
+                pygame.draw.polygon(surface, white, starPlotter(k * 1.22 * starSize, starSize * i, starSize / 2))
+
+    return surface
 
 if __name__ == "__main__":
     pygame.init()
     screen = pygame.display.set_mode((1280, 720))
     running = True
 
+    surface = drawFlag()
+    screen.blit(surface, (0, 0))
+    pygame.display.update()
+
+    clock = pygame.time.Clock()
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-
-        drawFlag()
-        pygame.display.update()
+        clock.tick(5)
 
     pygame.quit()
