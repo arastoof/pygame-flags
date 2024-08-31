@@ -22,6 +22,7 @@ def main():
     current_flag = 0
     running = True
 
+    clock = pygame.time.Clock()
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -31,9 +32,11 @@ def main():
                     current_flag = (current_flag + 1) % len(flags)
                 elif event.key == pygame.K_LEFT:
                     current_flag = (current_flag - 1) % len(flags)
-        
-        flags[current_flag]()
+
+        surface = flags[current_flag]()
+        screen.blit(surface, (0, 0))
         pygame.display.update()
+        clock.tick(60)
 
     pygame.quit()
 
