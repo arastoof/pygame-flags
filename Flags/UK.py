@@ -12,7 +12,7 @@ def rectPlotter(x, y, xSize, ySize):
 
     return rectPoints
 
-# Function to generate a star rotated through an angle using the starPlotter function
+# Function to generate a rectangle rotated through an angle using the rectPlotter function
 def rotatedRectPlotter(xCentre, yCentre, xSize, ySize, angle):
     rectPoints = rectPlotter(0, 0, xSize, ySize)
     newRectPoints = []
@@ -23,6 +23,8 @@ def rotatedRectPlotter(xCentre, yCentre, xSize, ySize, angle):
 # Screen resolution
 screenWidth = 1280
 screenHeight = 720
+halfHeight = screenHeight / 2
+halfWidth = screenWidth / 2
 screen = pygame.display.set_mode((screenWidth, screenHeight))
 
 # Define colours
@@ -32,37 +34,38 @@ blue = (1, 33, 105) # Blue represents Ireland and loyalty
 
 def drawFlag():
     screen.fill(blue)
+    diagonalAngles = (math.radians(60), math.radians(120))
+    diagonalSize = (screenWidth ** 2 + screenHeight ** 2) ** 0.5
     
     # The union flag is meant to combine the crosses of the flags of the three nations that have been united under one sovreign:
     # Scotland - Represented by the blue background and the white St Andrew's saltire
-    diagonalRectPoints = rotatedRectPlotter(screenWidth / 2, screenHeight / 2, screenHeight / 5, (screenWidth ** 2 + screenHeight ** 2) ** 0.5, math.radians(60))
-    pygame.draw.polygon(screen, white, diagonalRectPoints) # Draws the positive white diagonal
-    diagonalRectPoints = rotatedRectPlotter(screenWidth / 2, screenHeight / 2, screenHeight / 5, (screenWidth ** 2 + screenHeight ** 2) ** 0.5, math.radians(120))
-    pygame.draw.polygon(screen, white, diagonalRectPoints) # Draws the negative white diagonal
+    for counter in range (0, 2):
+        diagonalRectPoints = rotatedRectPlotter(halfWidth, halfHeight, screenHeight / 5, diagonalSize, diagonalAngles[counter])
+        pygame.draw.polygon(screen, white, diagonalRectPoints)
 
     # Ireland - Represented by the red St Patrick's saltire (though only Northern Ireland is in the union, which doesn't have an official flag)
-    quadrantCentre = ((screenWidth - (screenWidth / 2 + screenHeight / 6)) / 2, (screenHeight - (screenHeight / 2 - screenHeight / 6) / 2))
-    diagonalRectPoints = rotatedRectPlotter(quadrantCentre[0], quadrantCentre[1], screenHeight / 15, (screenWidth ** 2 + screenHeight ** 2) ** 0.5 * 0.5, math.radians(60))
-    pygame.draw.polygon(screen, red, diagonalRectPoints) # Draws the bottom left red diagonal
+    baseQuadrantCentreX = (halfWidth + screenHeight / 6)
+    size = diagonalSize * 0.5
+    xMultipliers = (-1, 1, -1, 1)
 
-    quadrantCentre = ((screenWidth + (screenWidth / 2 + screenHeight / 6)) / 2, ((screenHeight / 2 - screenHeight / 6) / 2))
-    diagonalRectPoints = rotatedRectPlotter(quadrantCentre[0], quadrantCentre[1], screenHeight / 15, (screenWidth ** 2 + screenHeight ** 2) ** 0.5 * 0.5, math.radians(60))
-    pygame.draw.polygon(screen, red, diagonalRectPoints) # Draws the top right red diagonal
+    for counter in range(0, 4):
+        quadrantCentreX = (screenWidth + (baseQuadrantCentreX * xMultipliers[counter])) / 2
+        quadrantCentreY = (halfHeight - screenHeight / 6) / 2
+        if (counter == 0 or counter == 3):
+            quadrantCentreY = screenHeight - quadrantCentreY
+        angle = diagonalAngles[0]
+        if counter > 1:
+            angle = diagonalAngles[1]
+        diagonalRectPoints = rotatedRectPlotter(quadrantCentreX, quadrantCentreY, screenHeight / 15, size, angle)
+        pygame.draw.polygon(screen, red, diagonalRectPoints)
+            
 
-    quadrantCentre = ((screenWidth - (screenWidth / 2 + screenHeight / 6)) / 2, ((screenHeight / 2 - screenHeight / 6) / 2))
-    diagonalRectPoints = rotatedRectPlotter(quadrantCentre[0], quadrantCentre[1], screenHeight / 15, (screenWidth ** 2 + screenHeight ** 2) ** 0.5 * 0.5, math.radians(120))
-    pygame.draw.polygon(screen, red, diagonalRectPoints) # Draws the top left red diagonal
-
-    quadrantCentre = ((screenWidth + (screenWidth / 2 + screenHeight / 6)) / 2, (screenHeight - (screenHeight / 2 - screenHeight / 6) / 2))
-    diagonalRectPoints = rotatedRectPlotter(quadrantCentre[0], quadrantCentre[1], screenHeight / 15, (screenWidth ** 2 + screenHeight ** 2) ** 0.5 * 0.5, math.radians(120))
-    pygame.draw.polygon(screen, red, diagonalRectPoints) # Draws the bottom right red diagonal
-
-    pygame.draw.polygon(screen, white, rectPlotter(screenWidth / 2, screenHeight / 2, screenHeight / 3, screenHeight)) # White vertical
-    pygame.draw.polygon(screen, white, rectPlotter(screenWidth / 2, screenHeight / 2, screenWidth, screenHeight / 3)) # White horizontal
+    pygame.draw.polygon(screen, white, rectPlotter(halfWidth, halfHeight, screenHeight / 3, screenHeight)) # White vertical
+    pygame.draw.polygon(screen, white, rectPlotter(halfWidth, halfHeight, screenWidth, screenHeight / 3)) # White horizontal
     
     # England and Wales - Represented by the straight red St George's cross (though this only uses England's flag)
-    pygame.draw.polygon(screen, red, rectPlotter(screenWidth / 2, screenHeight / 2, screenHeight / 5, screenHeight)) # Red vertical
-    pygame.draw.polygon(screen, red, rectPlotter(screenWidth / 2, screenHeight / 2, screenWidth, screenHeight / 5)) # Red horizontal
+    pygame.draw.polygon(screen, red, rectPlotter(halfWidth, halfHeight, screenHeight / 5, screenHeight)) # Red vertical
+    pygame.draw.polygon(screen, red, rectPlotter(halfWidth, halfHeight, screenWidth, screenHeight / 5)) # Red horizontal
 
 if __name__ == "__main__":
     pygame.init()
