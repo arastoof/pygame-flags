@@ -28,6 +28,8 @@ def rotatedStarPlotter(xCentre, yCentre, r, angle):
 # Screen resolution
 screenWidth = 1280
 screenHeight = 720
+smoothFactor = 4
+smoothing = True
 screen = pygame.display.set_mode((screenWidth, screenHeight))
 
 # Define colours
@@ -35,14 +37,16 @@ red = (238, 28, 37) # Red represents the Chinese Communist Revolution
 yellow = (255, 255, 0)
 
 def drawFlag():
-    surface = pygame.Surface((screenWidth, screenHeight))
+    surfaceHeight = screenHeight * smoothFactor
+    surfaceWidth = screenWidth * smoothFactor
+    surface = pygame.Surface((surfaceWidth, surfaceHeight))
 
     surface.fill(red)
 
     # The big yellow star represents the Chinese Communist Party
-    starX = screenWidth / 7
-    starY = screenHeight / 4
-    bigStarSize = screenWidth / 10
+    starX = surfaceWidth / 7
+    starY = surfaceHeight / 4
+    bigStarSize = surfaceWidth / 10
     pygame.draw.polygon(surface, yellow, starPlotter(starX, starY, bigStarSize))
 
     # The smaller stars represent the unity of the Chinese people and the 4 main classes
@@ -53,22 +57,32 @@ def drawFlag():
     # The stars are  oriented towards the big star to represent the CCP's leadership
         pygame.draw.polygon(surface, yellow, rotatedStarPlotter(position[0], position[1], bigStarSize / 4, math.radians(rotations[counter - 1])))
 
+    surface = pygame.transform.smoothscale(surface, (screenWidth, screenHeight))
     return surface
 
 if __name__ == "__main__":
     pygame.init()
-    screen = pygame.display.set_mode((1280, 720))
+    screen = pygame.display.set_mode((screenWidth, screenHeight))
     running = True
 
     surface = drawFlag()
-    screen.blit(surface, (0, 0))
-    pygame.display.update()
 
     clock = pygame.time.Clock()
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_a:
+                    smoothing = not smoothing
+                    if smoothing:
+                        smoothFactor = 4
+                    else:
+                        smoothFactor = 1
+                    surface = drawFlag()
+
+        screen.blit(surface, (0, 0))
+        pygame.display.update()
         clock.tick(5)
 
     pygame.quit()

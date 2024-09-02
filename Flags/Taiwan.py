@@ -13,6 +13,8 @@ def trianglePlotter(x, y, size):
 # Screen resolution
 screenWidth = 1280
 screenHeight = 720
+smoothFactor = 4
+smoothing = True
 screen = pygame.display.set_mode((screenWidth, screenHeight))
 
 # Define colours
@@ -21,12 +23,14 @@ white = (255, 255, 255)
 blue = (0, 0, 149) # Blue represents freedom and democracy
 
 def drawFlag():
-    surface = pygame.Surface((screenWidth, screenHeight))
+    surfaceHeight = screenHeight * smoothFactor
+    surfaceWidth = screenWidth * smoothFactor
+    surface = pygame.Surface((surfaceWidth, surfaceHeight))
 
     # The red field represents the sacrifice of the people to establish the Republic of China
     surface.fill(red)
 
-    canton = (screenWidth / 2, screenHeight / 2)
+    canton = (surfaceWidth / 2, surfaceHeight / 2)
     pygame.draw.rect(surface, blue, [0, 0, canton[0], canton[1]])
 
     # The white sun symbolises equality and the people's livelihoods
@@ -47,22 +51,32 @@ def drawFlag():
             trianglePoints.append((newX + canton[0] / 2, newY + canton[1] / 2))
         pygame.draw.polygon(surface, white, trianglePoints)
     
+    surface = pygame.transform.smoothscale(surface, (screenWidth, screenHeight))
     return surface
 
 if __name__ == "__main__":
     pygame.init()
-    screen = pygame.display.set_mode((1280, 720))
+    screen = pygame.display.set_mode((screenWidth, screenHeight))
     running = True
 
     surface = drawFlag()
-    screen.blit(surface, (0, 0))
-    pygame.display.update()
 
     clock = pygame.time.Clock()
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_a:
+                    smoothing = not smoothing
+                    if smoothing:
+                        smoothFactor = 4
+                    else:
+                        smoothFactor = 1
+                    surface = drawFlag()
+
+        screen.blit(surface, (0, 0))
+        pygame.display.update()
         clock.tick(5)
 
     pygame.quit()

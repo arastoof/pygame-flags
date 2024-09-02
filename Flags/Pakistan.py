@@ -28,6 +28,8 @@ def rotatedStarPlotter(xCentre, yCentre, r, angle):
 # Screen resolution
 screenWidth = 1280
 screenHeight = 720
+smoothFactor = 4
+smoothing = True
 screen = pygame.display.set_mode((screenWidth, screenHeight))
 
 # Define colours
@@ -35,18 +37,20 @@ green = (0, 64, 26) # Green represents Islam, the majority religion in the count
 white = (255, 255, 255) # White represents the religious minorities in the country
 
 def drawFlag():
-    surface = pygame.Surface((screenWidth, screenHeight))
+    surfaceHeight = screenHeight * smoothFactor
+    surfaceWidth = screenWidth * smoothFactor
+    surface = pygame.Surface((surfaceWidth, surfaceHeight))
 
     # The green and white together mean unity.
     surface.fill(white)
-    greenWidth = screenWidth * 3 / 4
-    pygame.draw.rect(surface, green, [screenWidth / 4, 0, greenWidth, screenHeight])
+    greenWidth = surfaceWidth * 3 / 4
+    pygame.draw.rect(surface, green, [surfaceWidth / 4, 0, greenWidth, surfaceHeight])
 
     # Generates the moon, which is a symbol of progress
-    moonRadius = screenHeight * 4 / 10
-    circleOffset = screenHeight / 10
-    xPosMoon = (screenWidth / 4) + (greenWidth / 2)
-    yPosMoon = (screenHeight / 2)
+    moonRadius = surfaceHeight * 4 / 10
+    circleOffset = surfaceHeight / 10
+    xPosMoon = (surfaceWidth / 4) + (greenWidth / 2)
+    yPosMoon = (surfaceHeight / 2)
     xOffset = xPosMoon + circleOffset
     yOffset = yPosMoon - circleOffset
     pygame.draw.circle(surface, white, (xPosMoon, yPosMoon), moonRadius)
@@ -55,22 +59,32 @@ def drawFlag():
     # Generates the star, which is represents knowledge and light
     pygame.draw.polygon(surface, white, rotatedStarPlotter(xOffset * 1.1, yOffset * 5 / 6, moonRadius * 0.3, math.radians(45)))
 
+    surface = pygame.transform.smoothscale(surface, (screenWidth, screenHeight))
     return surface
 
 if __name__ == "__main__":
     pygame.init()
-    screen = pygame.display.set_mode((1280, 720))
+    screen = pygame.display.set_mode((screenWidth, screenHeight))
     running = True
 
     surface = drawFlag()
-    screen.blit(surface, (0, 0))
-    pygame.display.update()
 
     clock = pygame.time.Clock()
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_a:
+                    smoothing = not smoothing
+                    if smoothing:
+                        smoothFactor = 4
+                    else:
+                        smoothFactor = 1
+                    surface = drawFlag()
+
+        screen.blit(surface, (0, 0))
+        pygame.display.update()
         clock.tick(5)
 
     pygame.quit()
