@@ -32,9 +32,7 @@ red = (206, 17, 45) # Red represents England and courage
 white = (255, 255, 255) # White represents Scotland and purity
 blue = (1, 33, 105) # Blue represents Ireland and loyalty
 
-def drawFlag():
-    surfaceHeight = screenHeight * smoothFactor
-    surfaceWidth = screenWidth * smoothFactor
+def drawFlag(surfaceWidth, surfaceHeight):
     surface = pygame.Surface((surfaceWidth, surfaceHeight))
 
     halfHeight = surfaceHeight / 2
@@ -82,7 +80,7 @@ if __name__ == "__main__":
     screen = pygame.display.set_mode((screenWidth, screenHeight))
     running = True
 
-    surface = drawFlag()
+    surface = drawFlag(screenWidth * smoothFactor, screenHeight * smoothFactor)
 
     clock = pygame.time.Clock()
     while running:
@@ -96,7 +94,7 @@ if __name__ == "__main__":
                         smoothFactor = 4
                     else:
                         smoothFactor = 1
-                    surface = drawFlag()
+                    surface = drawFlag(screenWidth * smoothFactor, screenHeight * smoothFactor)
 
         screen.blit(surface, (0, 0))
         pygame.display.update()

@@ -36,9 +36,7 @@ screen = pygame.display.set_mode((screenWidth, screenHeight))
 red = (227, 10, 23) # Red represents the bloodshed of soldiers fighting for Turkey's independence 
 white = (255, 255, 255) # White represents the diversity of Turkish cultures
 
-def drawFlag():
-    surfaceHeight = screenHeight * smoothFactor
-    surfaceWidth = screenWidth * smoothFactor
+def drawFlag(surfaceWidth, surfaceHeight):
     surface = pygame.Surface((surfaceWidth, surfaceHeight))
 
     # The Turkish flag has no official meaning, but there are many theories
@@ -61,7 +59,7 @@ if __name__ == "__main__":
     screen = pygame.display.set_mode((screenWidth, screenHeight))
     running = True
 
-    surface = drawFlag()
+    surface = drawFlag(screenWidth * smoothFactor, screenHeight * smoothFactor)
 
     clock = pygame.time.Clock()
     while running:
@@ -75,7 +73,7 @@ if __name__ == "__main__":
                         smoothFactor = 4
                     else:
                         smoothFactor = 1
-                    surface = drawFlag()
+                    surface = drawFlag(screenWidth * smoothFactor, screenHeight * smoothFactor)
 
         screen.blit(surface, (0, 0))
         pygame.display.update()

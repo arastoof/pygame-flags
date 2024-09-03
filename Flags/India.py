@@ -26,9 +26,7 @@ white = (255, 255, 255) # The white represents peace and truth
 blue = (6, 3, 141)
 green = (4, 106, 56) # Green represents faith and chivalry
 
-def drawFlag():
-    surfaceHeight = screenHeight * smoothFactor
-    surfaceWidth = screenWidth * smoothFactor
+def drawFlag(surfaceWidth, surfaceHeight):
     surface = pygame.Surface((surfaceWidth, surfaceHeight))
 
     surface.fill(white)
@@ -76,7 +74,7 @@ if __name__ == "__main__":
     screen = pygame.display.set_mode((screenWidth, screenHeight))
     running = True
 
-    surface = drawFlag()
+    surface = drawFlag(screenWidth * smoothFactor, screenHeight * smoothFactor)
 
     clock = pygame.time.Clock()
     while running:
@@ -90,7 +88,7 @@ if __name__ == "__main__":
                         smoothFactor = 4
                     else:
                         smoothFactor = 1
-                    surface = drawFlag()
+                    surface = drawFlag(screenWidth * smoothFactor, screenHeight * smoothFactor)
 
         screen.blit(surface, (0, 0))
         pygame.display.update()

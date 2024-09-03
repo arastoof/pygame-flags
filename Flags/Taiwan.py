@@ -22,9 +22,7 @@ red = (254, 0, 0)
 white = (255, 255, 255)
 blue = (0, 0, 149) # Blue represents freedom and democracy
 
-def drawFlag():
-    surfaceHeight = screenHeight * smoothFactor
-    surfaceWidth = screenWidth * smoothFactor
+def drawFlag(surfaceWidth, surfaceHeight):
     surface = pygame.Surface((surfaceWidth, surfaceHeight))
 
     # The red field represents the sacrifice of the people to establish the Republic of China
@@ -59,7 +57,7 @@ if __name__ == "__main__":
     screen = pygame.display.set_mode((screenWidth, screenHeight))
     running = True
 
-    surface = drawFlag()
+    surface = drawFlag(screenWidth * smoothFactor, screenHeight * smoothFactor)
 
     clock = pygame.time.Clock()
     while running:
@@ -73,7 +71,7 @@ if __name__ == "__main__":
                         smoothFactor = 4
                     else:
                         smoothFactor = 1
-                    surface = drawFlag()
+                    surface = drawFlag(screenWidth * smoothFactor, screenHeight * smoothFactor)
 
         screen.blit(surface, (0, 0))
         pygame.display.update()

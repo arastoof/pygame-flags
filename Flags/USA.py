@@ -29,9 +29,7 @@ red = (178, 34, 52) # Red represents hardiness and valour
 white = (255, 255, 255) # White represents purity and innocence
 blue = (60, 59, 110) # Blue represents vigilance, perseverance and justice
 
-def drawFlag():
-    surfaceHeight = screenHeight * smoothFactor
-    surfaceWidth = screenWidth * smoothFactor
+def drawFlag(surfaceWidth, surfaceHeight):
     surface = pygame.Surface((surfaceWidth, surfaceHeight))
 
     # Generates the stripes. 13 stripes represent 13 original colonies.
@@ -61,7 +59,7 @@ if __name__ == "__main__":
     screen = pygame.display.set_mode((screenWidth, screenHeight))
     running = True
 
-    surface = drawFlag()
+    surface = drawFlag(screenWidth * smoothFactor, screenHeight * smoothFactor)
 
     clock = pygame.time.Clock()
     while running:
@@ -75,7 +73,7 @@ if __name__ == "__main__":
                         smoothFactor = 4
                     else:
                         smoothFactor = 1
-                    surface = drawFlag()
+                    surface = drawFlag(screenWidth * smoothFactor, screenHeight * smoothFactor)
 
         screen.blit(surface, (0, 0))
         pygame.display.update()

@@ -14,26 +14,40 @@ def importFlags(directory):
             flags.append(module.drawFlag)
     return flags
 
-screen = pygame.display.set_mode((1280, 720))
 pygame.init()
 
 def main():
+    # Screen resolution
+    screenWidth = 1280
+    screenHeight = 720
+    smoothFactor = 4
+    smoothing = True
+    screen = pygame.display.set_mode((screenWidth, screenHeight))
+
     flags = importFlags('flags')
     current_flag = 0
     running = True
+
+    surface = flags[current_flag](screenWidth * smoothFactor, screenHeight * smoothFactor)
 
     clock = pygame.time.Clock()
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            elif event.type == pygame.KEYDOWN:
+            if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RIGHT:
                     current_flag = (current_flag + 1) % len(flags)
                 elif event.key == pygame.K_LEFT:
                     current_flag = (current_flag - 1) % len(flags)
+                elif event.key == pygame.K_a:
+                    smoothing = not smoothing
+                    if smoothing:
+                        smoothFactor = 4
+                    else:
+                        smoothFactor = 1
+                surface = flags[current_flag](screenWidth * smoothFactor, screenHeight * smoothFactor)    
 
-        surface = flags[current_flag]()
         screen.blit(surface, (0, 0))
         pygame.display.update()
         clock.tick(60)
